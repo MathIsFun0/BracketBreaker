@@ -1,0 +1,19 @@
+.brk** files:
+the last two digits in the filename represent the year.
+Every 9 bytes represent a 68-team bracket. Zero means the first team won in each bit, and one means the second team won. It goes by the order of the bits.
+
+.brf** files:
+These skip the First Four - every 8 bytes represent a 64-team bracket.
+
+File generation:
+This program can generate about 750,000 (6.43 MB) brackets every second (with First Four). 
+
+Some comparisons: (assuming after First Four, and with an older version that went slightly slower)
+Accuracy | Brackets Needed     | Time Needed
+50%      | 9223372036854775808 | 443,138 years
+60%      |      94726442144560 | 4 years, 201 days
+67%      |        124093581919 | 2 days, 4 hours
+---      |          1000000000 | 25 minutes, 15 seconds
+75%      |            74325939 | 1 minute, 52 seconds
+80%      |             1274473 | 2 seconds
+90%      |                 763 | 1 millisecond

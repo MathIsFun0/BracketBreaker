@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="BracketBreaker">
+    <output-path>$PROJECT_DIR$/out/artifacts/BracketBreaker</output-path>
+    <root id="archive" name="BracketBreaker.jar">
+      <element id="module-output" name="MarchMadness" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
