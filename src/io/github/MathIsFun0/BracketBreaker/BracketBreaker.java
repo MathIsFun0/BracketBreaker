@@ -50,9 +50,8 @@ public class BracketBreaker implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println("BracketBreaker v0.10");
-        System.out.println("Note: This uses 2022's bracket.");
-        BracketBreaker bb = new BracketBreaker();
+        new BracketBreaker().generateBracket();
+        /*BracketBreaker bb = new BracketBreaker();
         System.out.println("Enter the path to the file (don't enter any extension)");
         String ext = scanner.next();
         Path path = Paths.get(ext+".brk22");
@@ -111,8 +110,6 @@ public class BracketBreaker implements Runnable {
                     }
                 }
                 Team matchResult = battle(teamList[r][m][0],teamList[r][m][1]);
-                System.out.print(matchResult);
-                System.out.println(" won!");
                 if (matchResult == teamList[r][m][1]) {
                     result[pos] += pow;
                 }
@@ -208,8 +205,8 @@ public class BracketBreaker implements Runnable {
     }
     public Team battle(Team t1, Team t2) {
         float ratingDiff = t1.rating - t2.rating;
-        //base is -0.08f
-        float likelinessFactor = Math.min(Math.max(-0.2f*ratingDiff,-6.0f),6.0f);
+        //This float value -0.2529980437 comes from FiveThirtyEight's system, but I like -0.17 better
+        float likelinessFactor = Math.min(Math.max(-0.17f*ratingDiff,-6.0f),6.0f);
         int randomness = rng.nextInt();
         if (randomness > sigmoid(likelinessFactor)) {
             return t1;
