@@ -9,7 +9,7 @@ BracketBreaker runs Monte Carlo simulations of the tournament, using probabiliti
 To make storage as efficient as possible, each bracket is stored directly using binary, requiring only 8 bytes each. This makes it so anyone can store billions of brackets easily.
 
 ## Analysis
-Analysis of the files will be implemented before the Selection Sunday of the 2023 March Madness Tournament.
+Analysis of the files is largely hardcoded, so editing the source is necessary. However, it is possible to both calculate the winning team for each bracket generated and also separate all of the perfect brackets given a file and a list of match results, in any order.
 
 # Comparisons
 These comparisons assume the same rules as typical bracket challenge websites: that is, only considering the 63 matches after the First Four. They also assume a speed of 3,000,000 brackets per second, which is achievable using 4 threads. They also assume that you have average luck.
