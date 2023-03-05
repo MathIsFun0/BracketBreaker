@@ -14,6 +14,7 @@ public class BracketBreaker implements Runnable {
     private final static Scanner scanner = new Scanner(System.in);
     private final static int[] sigmoidArray = new int[12001]; //-6 to 6 by thousandths
     private final int bytesPerBracket;
+    private final int largestRoundLen;
     private final int reps;
     private final String fileOutput;
     private final int threadID;
@@ -21,21 +22,24 @@ public class BracketBreaker implements Runnable {
     private static int millionsGenerated = 0;
     private static boolean generationCompleted = false;
     private static long startTime = System.currentTimeMillis();
-    public BracketBreaker(Team[][][] bracket) {
+    public BracketBreaker(GeneratorTeam[][][] bracket) {
         this(bracket, 1, "brackets", -1);
     }
     public BracketBreaker() {
         this(Brackets.MarchMadness2022);
     }
-    public BracketBreaker(Team[][][] bracket, int millionsToGenerate, String outputFileName, int ID) {
+    public BracketBreaker(GeneratorTeam[][][] bracket, int millionsToGenerate, String outputFileName, int ID) {
         generateSigmoidArray();
         rng = new SplittableRandom();
         teamList = bracket;
         int matchesPerBracket = 0;
+        int largestRoundLen = 0;
         for (Team[][] round : bracket) {
+            largestRoundLen = Math.max(largestRoundLen, round.length);
             matchesPerBracket += round.length;
         }
         bytesPerBracket = (int)Math.ceil(matchesPerBracket/8.0);
+        this.largestRoundLen = largestRoundLen;
         reps = millionsToGenerate;
         fileOutput = outputFileName;
         threadID = ID;
@@ -51,38 +55,6 @@ public class BracketBreaker implements Runnable {
 
     public static void main(String[] args) throws IOException {
         new BracketBreaker().generateBracket();
-        /*BracketBreaker bb = new BracketBreaker();
-        System.out.println("Enter the path to the file (don't enter any extension)");
-        String ext = scanner.next();
-        Path path = Paths.get(ext+".brk22");
-        try {
-            File file = new File(ext+".brk22");
-            file.createNewFile();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        System.out.println("Enter the number of brackets to generate (in millions)");
-        System.out.println("NOTE: Each bracket is 8 bytes. Make sure to check your storage.");
-        int times = scanner.nextInt();
-        long time = System.currentTimeMillis();
-        for (int i = 1; i <= times; i++) {
-            byte[] thisWorks = bb.generate1000000Brackets();
-            Files.write(path, thisWorks, StandardOpenOption.APPEND);
-            System.out.print(i);
-            System.out.print(" million brackets generated! (");
-            System.out.print(i*1000000000L/(System.currentTimeMillis() - time));
-            System.out.println("/sec)");
-        }
-        System.out.print("Brackets generated in ");
-        long diff = System.currentTimeMillis() - time;
-        System.out.print(diff);
-        System.out.println(" ms");
-        //one bracket trial run
-        /*Path path = Paths.get("bracket.brk21");
-        long time = System.currentTimeMillis();
-                byte[] thisWorks = MarchMadness.generateBracket();
-                Files.write(path, thisWorks, StandardOpenOption.APPEND);*/
-        //generateBracket();
     }
     private static void generateSigmoidArray() {
         int i = 0;
@@ -95,10 +67,10 @@ public class BracketBreaker implements Runnable {
             i++;
         }
     }
-    private final Team[][][] teamList;
+    private final GeneratorTeam[][][] teamList;
     public byte[] generateBracket() {
-        Team[] teamWinners = new Team[32];
-        Team[] previousWinners = new Team[32];
+        GeneratorTeam[] teamWinners = new GeneratorTeam[32];
+        GeneratorTeam[] previousWinners = new GeneratorTeam[32];
         byte[] result = new byte[8];
         int pos = 0;
         int pow = 128;
@@ -109,7 +81,7 @@ public class BracketBreaker implements Runnable {
                         teamList[r][m][t] = previousWinners[teamList[r][m][t].placeholderFor];
                     }
                 }
-                Team matchResult = battle(teamList[r][m][0],teamList[r][m][1]);
+                GeneratorTeam matchResult = battle(teamList[r][m][0],teamList[r][m][1]);
                 if (matchResult == teamList[r][m][1]) {
                     result[pos] += pow;
                 }
@@ -154,8 +126,6 @@ public class BracketBreaker implements Runnable {
         }
         if (millionsGenerated == reps && !generationCompleted) {
             generationCompleted = true;
-            if (threadID != -1)
-                System.out.print("[" + threadID + "] ");
             System.out.print("Brackets generated in ");
             long diff = System.currentTimeMillis() - startTime;
             System.out.print(diff);
@@ -169,18 +139,18 @@ public class BracketBreaker implements Runnable {
         repeatedGenerateAndSave(-1);
     }
     public byte[] generate1000000Brackets() {
-        Team[] teamWinners = new Team[32];
-        Team[] previousWinners = new Team[32];
+        GeneratorTeam[] teamWinners = new GeneratorTeam[largestRoundLen];
+        GeneratorTeam[] previousWinners = new GeneratorTeam[largestRoundLen];
         byte[] result = new byte[1000000*bytesPerBracket];
-        Team matchResult;
+        GeneratorTeam matchResult;
         int pos = 0;
         short pow = 1;
         for (int i = 0; i < 1000000; i++) {
-            for (byte r = 0; r < 6; r++) {
+            for (byte r = 0; r < teamList.length; r++) {
                 for (byte m = 0; m < teamList[r].length; m++) {
                     for (byte t = 0; t <= 1; t++) {
                         if (teamList[r][m][t].placeholderFor != -1) {
-                            teamList[r][m][t] = previousWinners[teamList[r][m][t].placeholderFor];
+                            teamList[r][m][t].rating = previousWinners[teamList[r][m][t].placeholderFor].rating;
                         }
                     }
                     matchResult = battle(teamList[r][m][0], teamList[r][m][1]);
@@ -203,10 +173,10 @@ public class BracketBreaker implements Runnable {
         }
         return result;
     }
-    public Team battle(Team t1, Team t2) {
+    public GeneratorTeam battle(GeneratorTeam t1, GeneratorTeam t2) {
         float ratingDiff = t1.rating - t2.rating;
-        //This float value -0.2529980437 comes from FiveThirtyEight's system, but I like -0.17 better
-        float likelinessFactor = Math.min(Math.max(-0.17f*ratingDiff,-6.0f),6.0f);
+        //The float value -0.2529980437 comes from FiveThirtyEight's system, but I like this better
+        float likelinessFactor = Math.min(Math.max(-0.15f*ratingDiff,-6.0f),6.0f);
         int randomness = rng.nextInt();
         if (randomness > sigmoid(likelinessFactor)) {
             return t1;

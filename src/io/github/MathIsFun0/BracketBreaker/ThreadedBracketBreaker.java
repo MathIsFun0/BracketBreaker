@@ -1,14 +1,26 @@
 package io.github.MathIsFun0.BracketBreaker;
 
+import java.util.Scanner;
+
 public class ThreadedBracketBreaker {
     private final BracketBreaker[] bb;
-    public ThreadedBracketBreaker(Team[][][] bracket, int threads, int reps, String fileOutput) {
+    public ThreadedBracketBreaker(GeneratorTeam[][][] bracket, int threads, int millions, String fileOutput) {
         bb = new BracketBreaker[threads];
         for (int i = 0; i < bb.length; i++)
-            bb[i] = new BracketBreaker(bracket, reps, fileOutput, i+1);
+            bb[i] = new BracketBreaker(bracket, millions, fileOutput, i+1);
     }
     public static void main(String[] args) {
-        new ThreadedBracketBreaker(Brackets.MarchMadness2022, 8, 40, "smol").run();
+        System.out.println("BracketBreaker v0.2.0");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\nEnter the number of threads to use: ");
+        int threads = scanner.nextInt();
+        System.out.println("\nNote: Every million brackets takes up 8MB - file storage can be used very quickly!");
+        System.out.print("Enter the number of brackets to generate (in millions): ");
+        int millions = scanner.nextInt(); scanner.nextLine(); //Stuff I learned in AP Comp Sci actually coming to use here? No way...
+        System.out.print("\nEnter the name of the file to save to (without any extension): ");
+        String fileName = scanner.nextLine();
+        System.out.println();
+        new ThreadedBracketBreaker(Brackets.MarchMadness2022, threads, millions, fileName).run();
     }
     public void run() {
         for (BracketBreaker bracketBreaker : bb)
