@@ -145,16 +145,19 @@ public class BracketBreaker implements Runnable {
         GeneratorTeam matchResult;
         int pos = 0;
         short pow = 1;
+        byte il = (byte)teamList.length;
         for (int i = 0; i < 1000000; i++) {
-            for (byte r = 0; r < teamList.length; r++) {
-                for (byte m = 0; m < teamList[r].length; m++) {
+            for (byte r = 0; r < il; r++) {
+                byte ml = (byte) teamList[r].length;
+                for (byte m = 0; m < ml; m++) {
                     for (byte t = 0; t <= 1; t++) {
-                        if (teamList[r][m][t].placeholderFor != -1) {
+                        //if (teamList[r][m][t].placeholderFor != -1) {
+                        if (r >= 1) { //Optimization for March Madness only...
                             teamList[r][m][t].rating = previousWinners[teamList[r][m][t].placeholderFor].rating;
                         }
                     }
-                    matchResult = battle(teamList[r][m][0], teamList[r][m][1]);
-                    if (matchResult == teamList[r][m][1]) {
+                    teamWinners[m] = battle(teamList[r][m][0], teamList[r][m][1]);
+                    if (teamWinners[m] == teamList[r][m][1]) {
                         result[pos] += pow;
                     }
                     pow *= 2;
@@ -162,7 +165,6 @@ public class BracketBreaker implements Runnable {
                         pow = 1;
                         pos++;
                     }
-                    teamWinners[m] = matchResult;
                 }
                 System.arraycopy(teamWinners, 0, previousWinners, 0, teamList[r].length);
             }
@@ -174,14 +176,19 @@ public class BracketBreaker implements Runnable {
         return result;
     }
     public GeneratorTeam battle(GeneratorTeam t1, GeneratorTeam t2) {
+        /* Uncompressed code:
         float ratingDiff = t1.rating - t2.rating;
-        //The float value -0.2529980437 comes from FiveThirtyEight's system, but I like this better
-        float likelinessFactor = Math.min(Math.max(-0.15f*ratingDiff,-6.0f),6.0f);
+        //The float value -0.175365 comes from FiveThirtyEight's system
+        float likelinessFactor = Math.min(Math.max(-0.175365f*ratingDiff,-6.0f),6.0f);
         int randomness = rng.nextInt();
         if (randomness > sigmoid(likelinessFactor)) {
             return t1;
         }
-        return t2;
+        return t2;*/
+        //The float value -0.175365 comes from FiveThirtyEight's system
+        //Making the ratings integers made things 20% faster by making the math easier...
+        //return (rng.nextInt() > sigmoid(Math.min(Math.max(-0.175365f*(t1.rating - t2.rating),-6.0f),6.0f))) ? t1 : t2;
+        return (rng.nextInt() > sigmoidArray[(t2.rating - t1.rating)+6000]) ? t1 : t2;
     }
     static int sigmoid(float x) {
         //return 1/(1+(float)Math.pow(Math.E,-1.0f*x));
