@@ -47,7 +47,7 @@ public class BracketAnalyzer {
                     boolean busted = false;
                     for (Integer[] completedGame : completedGames) {
                         int index = bytesPerBracket * j + completedGame[0] / 8;
-                        if ((rawResults[index] & (1 << completedGame[0] % 8)) == 0) {
+                        if ((rawResults[index] & (1 << (7 - completedGame[0] % 8))) == 0) {
                             if (completedGame[1] == 0) gamesChecked++;
                             else busted = true;
                         } else {
@@ -76,7 +76,7 @@ public class BracketAnalyzer {
         }
     }
 
-    public static void getWinners() throws IOException {
+    public static void getWinners() throws IOException { //todo: update this to work with MMBB's storage system
         try (RandomAccessFile data = new RandomAccessFile(currentFile, "r")) {
             byte[] rawResults = new byte[1000000*bytesPerBracket];
             AnalyzerTeam[] teamWinners = new AnalyzerTeam[largestRoundLen];

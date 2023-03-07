@@ -1,10 +1,13 @@
 package io.github.MathIsFun0.BracketBreaker;
 
 public class GeneratorTeam extends Team {
-    public int rating;
+    public float rating;
     public GeneratorTeam(String n, double r, int s) {
-        rating = (int)(r*175);
+        rating = (float)r;
         placeholderFor = -1;
+    }
+    public int toInt() {
+        return (int)(rating*175);
     }
     public GeneratorTeam(int p){super(p);}
 }

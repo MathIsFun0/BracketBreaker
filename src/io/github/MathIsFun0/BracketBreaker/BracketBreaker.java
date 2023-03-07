@@ -10,18 +10,18 @@ import java.util.SplittableRandom;
 import java.util.Scanner;
 
 public class BracketBreaker implements Runnable {
-    private final SplittableRandom rng;
-    private final static Scanner scanner = new Scanner(System.in);
-    private final static int[] sigmoidArray = new int[12001]; //-6 to 6 by thousandths
-    private final int bytesPerBracket;
-    private final int largestRoundLen;
-    private final int reps;
-    private final String fileOutput;
-    private final int threadID;
-    private static int runningInstances = 0;
-    private static int millionsGenerated = 0;
-    private static boolean generationCompleted = false;
-    private static long startTime = System.currentTimeMillis();
+    protected final SplittableRandom rng;
+    protected final static Scanner scanner = new Scanner(System.in);
+    protected final static int[] sigmoidArray = new int[12001]; //-6 to 6 by thousandths
+    protected final int bytesPerBracket;
+    protected final int largestRoundLen;
+    protected int reps;
+    protected String fileOutput;
+    protected int threadID;
+    protected static int runningInstances = 0;
+    protected static int millionsGenerated = 0;
+    protected static boolean generationCompleted = false;
+    protected static long startTime = System.currentTimeMillis();
     public BracketBreaker(GeneratorTeam[][][] bracket) {
         this(bracket, 1, "brackets", -1);
     }
@@ -56,7 +56,7 @@ public class BracketBreaker implements Runnable {
     public static void main(String[] args) throws IOException {
         new BracketBreaker().generateBracket();
     }
-    private static void generateSigmoidArray() {
+    protected static void generateSigmoidArray() {
         int i = 0;
         long newRange = (long)(Integer.MAX_VALUE) - Integer.MIN_VALUE;
         for (float f = 6.0f; f > -6.001f; f -= 0.001f) {
@@ -67,7 +67,7 @@ public class BracketBreaker implements Runnable {
             i++;
         }
     }
-    private final GeneratorTeam[][][] teamList;
+    protected final GeneratorTeam[][][] teamList;
     public byte[] generateBracket() {
         GeneratorTeam[] teamWinners = new GeneratorTeam[32];
         GeneratorTeam[] previousWinners = new GeneratorTeam[32];
@@ -151,8 +151,8 @@ public class BracketBreaker implements Runnable {
                 byte ml = (byte) teamList[r].length;
                 for (byte m = 0; m < ml; m++) {
                     for (byte t = 0; t <= 1; t++) {
-                        //if (teamList[r][m][t].placeholderFor != -1) {
-                        if (r >= 1) { //Optimization for March Madness only...
+                        if (teamList[r][m][t].placeholderFor != -1) {
+                        //if (r >= 1) { //Optimization for March Madness only...
                             teamList[r][m][t].rating = previousWinners[teamList[r][m][t].placeholderFor].rating;
                         }
                     }
@@ -186,9 +186,9 @@ public class BracketBreaker implements Runnable {
         }
         return t2;*/
         //The float value -0.175365 comes from FiveThirtyEight's system
-        //Making the ratings integers made things 20% faster by making the math easier...
-        //return (rng.nextInt() > sigmoid(Math.min(Math.max(-0.175365f*(t1.rating - t2.rating),-6.0f),6.0f))) ? t1 : t2;
-        return (rng.nextInt() > sigmoidArray[(t2.rating - t1.rating)+6000]) ? t1 : t2;
+        //Making the ratings integers made things 20% faster by making the math easier... MarchMadness only
+        return (rng.nextInt() > sigmoid(Math.min(Math.max(-0.175365f*(t1.rating - t2.rating),-6.0f),6.0f))) ? t1 : t2;
+        //return (rng.nextInt() > sigmoidArray[(t2.rating - t1.rating)+6000]) ? t1 : t2;
     }
     static int sigmoid(float x) {
         //return 1/(1+(float)Math.pow(Math.E,-1.0f*x));

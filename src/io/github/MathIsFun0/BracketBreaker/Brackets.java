@@ -80,6 +80,59 @@ public class Brackets {
             }
     };
 
+    public static int[][][] MarchMadness2022_Optimized = {
+            // Doesn't include the First Four. Uses FiveThirtyEight ratings.
+            { //First Round
+                    {new GeneratorTeam("Gonzaga", 96.46, 1).toInt(), new GeneratorTeam("Georgia State", 73.46, 16).toInt()},
+                    {new GeneratorTeam("Boise State", 82.49, 8).toInt(), new GeneratorTeam("Memphis", 84.91, 9).toInt()},
+                    {new GeneratorTeam("Connecticut", 86.37, 5).toInt(), new GeneratorTeam("New Mexico State", 77.68, 12).toInt()},
+                    {new GeneratorTeam("Arkansas", 86.77, 4).toInt(), new GeneratorTeam("Vermont", 80.32, 13).toInt()},
+                    {new GeneratorTeam("Alabama", 85.15, 6).toInt(), new GeneratorTeam("Notre Dame", 82.10, 11).toInt()},
+                    {new GeneratorTeam("Texas Tech", 88.70, 3).toInt(), new GeneratorTeam("Montana State", 74.30, 14).toInt()},
+                    {new GeneratorTeam("Michigan State", 83.46, 7).toInt(), new GeneratorTeam("Davidson", 81.83, 10).toInt()},
+                    {new GeneratorTeam("Duke", 89.28, 2).toInt(), new GeneratorTeam("Cal State Fullerton", 71.78, 15).toInt()},
+                    {new GeneratorTeam("Baylor", 87.66, 1).toInt(), new GeneratorTeam("Norfolk State", 71.39, 16).toInt()},
+                    {new GeneratorTeam("North Carolina", 83.99, 8).toInt(), new GeneratorTeam("Marquette", 81.90, 9).toInt()},
+                    {new GeneratorTeam("Saint Mary's (CA).toInt()", 84.34, 5).toInt(), new GeneratorTeam("Indiana", 83.43, 12).toInt()},
+                    {new GeneratorTeam("UCLA", 89.83, 4).toInt(), new GeneratorTeam("Akron", 76.69, 13).toInt()},
+                    {new GeneratorTeam("Texas", 86.32, 6).toInt(), new GeneratorTeam("Virginia Tech", 84.68, 11).toInt()},
+                    {new GeneratorTeam("Purdue", 89.10, 3).toInt(), new GeneratorTeam("Yale", 74.74, 14).toInt()},
+                    {new GeneratorTeam("Murray State", 81.35, 7).toInt(), new GeneratorTeam("San Francisco", 81.78, 10).toInt()},
+                    {new GeneratorTeam("Kentucky", 91.22, 2).toInt(), new GeneratorTeam("Saint Peter's", 74.17, 15).toInt()},
+                    {new GeneratorTeam("Arizona", 90.92, 1).toInt(), new GeneratorTeam("Wright State", 74.25, 16).toInt()},
+                    {new GeneratorTeam("Seton Hall", 82.61, 8).toInt(), new GeneratorTeam("Texas Christian", 81.93, 9).toInt()},
+                    {new GeneratorTeam("Houston", 88.72, 5).toInt(), new GeneratorTeam("Alabama-Birmingham", 81.17, 12).toInt()},
+                    {new GeneratorTeam("Illinois", 86.76, 4).toInt(), new GeneratorTeam("Chattanooga", 78.70, 13).toInt()},
+                    {new GeneratorTeam("Colorado State", 81.65, 6).toInt(), new GeneratorTeam("Michigan", 84.73, 11).toInt()},
+                    {new GeneratorTeam("Tennessee", 88.87, 3).toInt(), new GeneratorTeam("Longwood", 73.42, 14).toInt()},
+                    {new GeneratorTeam("Ohio State", 84.15, 7).toInt(), new GeneratorTeam("Loyola Chicago", 83.70, 10).toInt()},
+                    {new GeneratorTeam("Villanova", 90.22, 2).toInt(), new GeneratorTeam("Delaware", 73.57, 15).toInt()},
+                    {new GeneratorTeam("Kansas", 91.27, 1).toInt(), new GeneratorTeam("Texas Southern", 71.14, 16).toInt()},
+                    {new GeneratorTeam("San Diego State", 83.49, 8).toInt(), new GeneratorTeam("Creighton", 81.49, 9).toInt()},
+                    {new GeneratorTeam("Iowa", 88.96, 5).toInt(), new GeneratorTeam("Richmond", 79.91, 12).toInt()},
+                    {new GeneratorTeam("Providence", 82.72, 4).toInt(), new GeneratorTeam("South Dakota State", 79.67, 13).toInt()},
+                    {new GeneratorTeam("Louisiana State", 85.72, 6).toInt(), new GeneratorTeam("Iowa State", 80.57, 11).toInt()},
+                    {new GeneratorTeam("Wisconsin", 84.66, 3).toInt(), new GeneratorTeam("Colgate", 76.40, 14).toInt()},
+                    {new GeneratorTeam("Southern California", 83.02, 7).toInt(), new GeneratorTeam("Miami (FL).toInt()", 81.13, 10).toInt()},
+                    {new GeneratorTeam("Auburn", 89.48, 2).toInt(), new GeneratorTeam("Jacksonville State", 73.15, 15).toInt()},
+            },
+            { //Second Round
+                    {0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}
+            },
+            { //Sweet Sixteen
+                    {0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}
+            },
+            { //Elite Eight
+                    {0,0},{0,0},{0,0},{0,0}
+            },
+            { //Final Four
+                    {0,0},{0,0}
+            },
+            { //Championship
+                    {0,0}
+            }
+    };
+
     public static AnalyzerTeam[][][] MarchMadness2022Analyzer = {
             // Doesn't include the First Four. Uses FiveThirtyEight ratings.
             { //First Round
