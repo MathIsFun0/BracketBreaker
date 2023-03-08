@@ -7,11 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.SplittableRandom;
-import java.util.Scanner;
 
 public class BracketBreaker implements Runnable {
     protected final SplittableRandom rng;
-    protected final static Scanner scanner = new Scanner(System.in);
     protected final static int[] sigmoidArray = new int[12001]; //-6 to 6 by thousandths
     protected final int bytesPerBracket;
     protected final int largestRoundLen;
