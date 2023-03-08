@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dsi">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../include" />
+    </SOURCES>
+  </library>
+</component>

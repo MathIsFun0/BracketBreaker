@@ -15,17 +15,22 @@ public class MMBracketBreaker extends BracketBreaker {
         byte[] result = new byte[1000000*bytesPerBracket];
         int pos = 0;
         short pow = 128;
+        byte ml = 64;
         for (int i = 0; i < 1000000; i++) {
+            ml = 64;
             for (byte r = 0; r < 6; r++) {
-                byte ml = (byte) teamList[r].length;
+                ml >>= 1;
                 for (byte m = 0; m < ml; m++) {
-                    for (byte t = 0; t <= 1; t++) {
-                        if (r >= 1)
-                            teamList[r][m][t] = previousWinners[m*2+t];
-                    }
-                    teamWinners[m] = (rng.nextInt() > sigmoidArray[(teamList[r][m][1] - teamList[r][m][0])+6000]) ? teamList[r][m][0] : teamList[r][m][1];
-                    if (teamWinners[m] == teamList[r][m][1]) {
-                        result[pos] += pow;
+                    if (r == 0) {
+                        teamWinners[m] = (rng.nextInt() > sigmoidArray[(teamList[r][m][1] - teamList[r][m][0]) + 6000]) ? teamList[r][m][0] : teamList[r][m][1];
+                        if (teamWinners[m] == teamList[r][m][1]) {
+                            result[pos] += pow;
+                        }
+                    } else {
+                        teamWinners[m] = (rng.nextInt() > sigmoidArray[(previousWinners[m * 2 + 1] - previousWinners[m * 2]) + 6000]) ? previousWinners[m * 2] : previousWinners[m * 2 + 1];
+                        if (teamWinners[m] == previousWinners[m * 2 + 1]) {
+                            result[pos] += pow;
+                        }
                     }
                     pow >>= 1;
                     if (pow == 0) {
