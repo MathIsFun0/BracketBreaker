@@ -3,7 +3,7 @@
 BracketBreaker is a program that can generate March Madness brackets based on a rating system of the field of 64 teams. It can be customized (only in the source code for now) to work with any single-elimination bracket system without reseeding. It's designed to be both fast and accurate.
 
 ## Algorithm
-BracketBreaker runs Monte Carlo simulations of the tournament, using probabilities based on the inputted ratings to simulate billions of tournament outcomes and create brackets. It can generate and store about 750,000 brackets per second per thread, depending on the CPU of the computer.
+BracketBreaker runs Monte Carlo simulations of the tournament, using probabilities based on the inputted ratings to simulate billions of tournament outcomes and create brackets. It can generate and store 1,000,000+ brackets per second per thread, depending on the CPU of the computer.
 
 ## Storage
 To make storage as efficient as possible, each bracket is stored directly using binary, requiring only 8 bytes each. This makes it so anyone can store billions of brackets easily.
@@ -11,8 +11,8 @@ To make storage as efficient as possible, each bracket is stored directly using 
 ## Analysis
 Analysis of the files is largely hardcoded, so editing the source is necessary. However, it is possible to both calculate the winning team for each bracket generated and also separate all of the perfect brackets given a file and a list of match results, in any order.
 
-# Comparisons
-These comparisons assume the same rules as typical bracket challenge websites: that is, only considering the 63 matches after the First Four. They also assume a speed of 3,000,000 brackets per second, which is achievable using 4 threads. They also assume that you have average luck.
+## Comparisons
+These comparisons assume the same rules as typical bracket challenge websites: that is, only considering the 63 matches after the First Four. They also assume a speed of 3,000,000 brackets per second, and that you have average luck.
 
 Note that an accuracy of about 2/3 is typical when generating brackets, and that the accuracy of models varies from year to year.
 
@@ -25,3 +25,6 @@ Note that an accuracy of about 2/3 is typical when generating brackets, and that
 | 75% | 74,325,939 | 24.8 s | 9.72 MB
 | 80% | 1,274,473 | 0.4 s | 10.2 MB
 | 90% | 763 | 0.25 ms | 6.1 KB
+
+# ESPN_TC_input.js
+This JavaScript file can be pasted into the console when a bracket is open on the ESPN Tournament Challenge site to fill out a bracket based on the same algorithm.

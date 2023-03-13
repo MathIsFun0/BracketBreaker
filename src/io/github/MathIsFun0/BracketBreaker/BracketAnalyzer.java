@@ -18,19 +18,64 @@ public class BracketAnalyzer {
     public static int bytesPerBracket = 8;
     public static int largestRoundLen = 32;
     public static ArrayList<Integer[]> completedGames = new ArrayList<>();
+    protected static final XoShiRo256PlusRandom rng = new XoShiRo256PlusRandom();
 
     public static void main(String[] args) {
+        BracketBreaker.generateSigmoidArray();
         completedGames.add(new Integer[]{20, 1}); //11 Michigan upsets 6 Colorado St
         completedGames.add(new Integer[]{27, 0}); //4 Providence beats 13 South Dakota St
         completedGames.add(new Integer[]{1, 1}); //9 Memphis upsets 8 Boise St
         completedGames.add(new Integer[]{8, 0}); //1 Baylor beats 16 Norfolk St
-        try {
+        /*try {
             getWinners();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+        verboseBracketGeneration(5);
     }
 
+    public static AnalyzerTeam battle(AnalyzerTeam t1, AnalyzerTeam t2) {
+        /* Uncompressed code:
+        float ratingDiff = t1.rating - t2.rating;
+        //The float value -0.175365 comes from FiveThirtyEight's system
+        float likelinessFactor = Math.min(Math.max(-0.175365f*ratingDiff,-6.0f),6.0f);
+        int randomness = rng.nextInt();
+        if (randomness > sigmoid(likelinessFactor)) {
+            return t1;
+        }
+        return t2;*/
+        //The float value -0.175365 comes from FiveThirtyEight's system
+        return (rng.nextInt() > BracketBreaker.sigmoid(Math.min(Math.max(-0.175f*(t1.rating - t2.rating),-6.0f),6.0f))) ? t1 : t2;
+        //return (rng.nextInt() > sigmoidArray[(t2.rating - t1.rating)+6000]) ? t1 : t2;
+    }
+
+    public static void verboseBracketGeneration(int x) {
+        AnalyzerTeam[] teamWinners = new AnalyzerTeam[largestRoundLen];
+        AnalyzerTeam[] previousWinners = new AnalyzerTeam[largestRoundLen];
+        byte il = (byte)bracket.length;
+        for (int q = 0; q < x; q++) {
+            for (byte r = 0; r < il; r++) {
+                byte ml = (byte) bracket[r].length;
+                for (byte m = 0; m < ml; m++) {
+                    for (byte t = 0; t <= 1; t++) {
+                        if (bracket[r][m][t].placeholderFor != -1) {
+                            //if (r >= 1) { //Optimization for March Madness only...
+                            bracket[r][m][t].rating = previousWinners[bracket[r][m][t].placeholderFor].rating;
+                            bracket[r][m][t].seed = previousWinners[bracket[r][m][t].placeholderFor].seed;
+                            bracket[r][m][t].name = previousWinners[bracket[r][m][t].placeholderFor].name;
+                        }
+                    }
+                    teamWinners[m] = battle(bracket[r][m][0], bracket[r][m][1]);
+                    if (teamWinners[m] == bracket[r][m][0]) System.out.print(1);
+                    else System.out.print(2);
+                    if (teamWinners[m] == bracket[r][m][0])
+                        previousWinners[m] = teamWinners[m];
+                }
+                System.arraycopy(teamWinners, 0, previousWinners, 0, bracket[r].length);
+            }
+            System.out.println();
+        }
+    }
     public static void getAndSavePerfectBrackets() throws IOException {
         try (RandomAccessFile data = new RandomAccessFile(currentFile, "r")) {
             byte[] rawResults = new byte[1000000*bytesPerBracket];
