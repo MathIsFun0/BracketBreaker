@@ -7,7 +7,7 @@ public class GeneratorTeam extends Team {
         placeholderFor = -1;
     }
     public int toInt() {
-        return (int)(rating*175);
+        return (int)(rating*200);
     }
     public GeneratorTeam(int p){super(p);}
 }

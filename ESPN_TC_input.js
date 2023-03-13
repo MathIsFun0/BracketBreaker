@@ -1,5 +1,5 @@
 // Change how often upsets occur
-var stability = 0.175;
+var stability = 0.200;
 
 // Generation
 var bracket = new Array(63);
