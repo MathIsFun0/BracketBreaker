@@ -101,9 +101,9 @@ public class BracketBreaker implements Runnable {
             generationCompleted = false;
         }
         runningInstances++;
-        Path path = Paths.get(fileOutput+(threadID == -1 ? threadID : "")+".brk22");
+        Path path = Paths.get(fileOutput+(threadID == -1 ? threadID : "")+".brk23");
         try {
-            File file = new File(fileOutput+(threadID == -1 ? threadID : "")+".brk22");
+            File file = new File(fileOutput+(threadID == -1 ? threadID : "")+".brk23");
             file.createNewFile();
         } catch (Exception e) {
             System.out.println(e);

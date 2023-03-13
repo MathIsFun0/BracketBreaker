@@ -15,7 +15,7 @@ public class ThreadedBracketBreaker {
             bb[i] = new MMBracketBreaker(millions, fileOutput, i+1);
     }
     public static void main(String[] args) {
-        System.out.println("BracketBreaker v0.3.0");
+        System.out.println("BracketBreaker v1.0.0");
         Scanner scanner = new Scanner(System.in);
         System.out.print("\nEnter the number of threads to use: ");
         int threads = scanner.nextInt();

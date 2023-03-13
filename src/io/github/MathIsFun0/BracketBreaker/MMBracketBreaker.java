@@ -1,10 +1,10 @@
 package io.github.MathIsFun0.BracketBreaker;
 
 public class MMBracketBreaker extends BracketBreaker {
-    private final int[][][] teamList;
+    private final int[][] teamList;
     public MMBracketBreaker(int millionsToGenerate, String outputFileName, int ID) {
         generateSigmoidArray();
-        teamList = Brackets.MarchMadness2022_Optimized;
+        teamList = Brackets.MarchMadness2023_Optimized;
         reps = millionsToGenerate;
         fileOutput = outputFileName;
         threadID = ID;
@@ -22,8 +22,8 @@ public class MMBracketBreaker extends BracketBreaker {
                 ml >>= 1;
                 for (byte m = 0; m < ml; m++) {
                     if (r == 0) {
-                        teamWinners[m] = (rng.nextInt() > sigmoidArray[(teamList[r][m][1] - teamList[r][m][0]) + 6000]) ? teamList[r][m][0] : teamList[r][m][1];
-                        if (teamWinners[m] == teamList[r][m][1]) {
+                        teamWinners[m] = (rng.nextInt() > sigmoidArray[(teamList[m][1] - teamList[m][0]) + 6000]) ? teamList[m][0] : teamList[m][1];
+                        if (teamWinners[m] == teamList[m][1]) {
                             result[pos] += pow;
                         }
                     } else {
@@ -38,59 +38,7 @@ public class MMBracketBreaker extends BracketBreaker {
                         pos++;
                     }
                 }
-                System.arraycopy(teamWinners, 0, previousWinners, 0, teamList[r].length);
-            }
-            if (pow != 128) {
-                pow = 128;
-                pos++;
-            }
-        }
-        return result;
-    }
-
-    private int[] createArray() {
-        return new int[largestRoundLen];
-    }
-    private byte[] createByteArray() {
-        return new byte[1000000*bytesPerBracket];
-    }
-    private void updateTeamList(byte r, byte m, byte t, int[] previousWinners) {
-        teamList[r][m][t] = previousWinners[m*2+t];
-    }
-    private int random() {
-        return rng.nextInt();
-    }
-    private int doTheMath(byte r, byte m) {
-      return (teamList[r][m][1] - teamList[r][m][0])+6000;
-    }
-    private int getFromArray(int i) {
-        return sigmoidArray[i];
-    }
-    public byte[] generate1000000BracketsDebug() {
-        int[] teamWinners = createArray();
-        int[] previousWinners = createArray();
-        byte[] result = createByteArray();
-        int pos = 0;
-        short pow = 128;
-        for (int i = 0; i < 1000000; i++) {
-            for (byte r = 0; r < 6; r++) {
-                byte ml = (byte) teamList[r].length;
-                for (byte m = 0; m < ml; m++) {
-                    for (byte t = 0; t <= 1; t++) {
-                        if (r >= 1)
-                            updateTeamList(r, m, t, previousWinners);
-                    }
-                    teamWinners[m] = (random() > getFromArray(doTheMath(r, m))) ? teamList[r][m][0] : teamList[r][m][1];
-                    if (teamWinners[m] == teamList[r][m][1]) {
-                        result[pos] += pow;
-                    }
-                    pow >>= 1;
-                    if (pow == 0) {
-                        pow = 128;
-                        pos++;
-                    }
-                }
-                System.arraycopy(teamWinners, 0, previousWinners, 0, teamList[r].length);
+                System.arraycopy(teamWinners, 0, previousWinners, 0, ml);
             }
             if (pow != 128) {
                 pow = 128;

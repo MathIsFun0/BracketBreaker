@@ -12,9 +12,9 @@ import java.util.*;
 
 public class BracketAnalyzer {
     // This time I'm intentionally making everything static, so it can be accessed from anywhere without making a class...
-    public static String currentFile = "brackets.brk22";
-    public static String perfectionFile = "perfection.brk22";
-    public static AnalyzerTeam[][][] bracket = Brackets.MarchMadness2022Analyzer;
+    public static String currentFile = "brackets.brk23";
+    public static String perfectionFile = "perfection.brk23";
+    public static AnalyzerTeam[][][] bracket = Brackets.MarchMadness2023Analyzer;
     public static int bytesPerBracket = 8;
     public static int largestRoundLen = 32;
     public static ArrayList<Integer[]> completedGames = new ArrayList<>();
@@ -25,7 +25,7 @@ public class BracketAnalyzer {
         completedGames.add(new Integer[]{1, 1}); //9 Memphis upsets 8 Boise St
         completedGames.add(new Integer[]{8, 0}); //1 Baylor beats 16 Norfolk St
         try {
-            getAndSavePerfectBrackets();
+            getWinners();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class BracketAnalyzer {
             for (long i = 0, len = data.length() / 1000000 / bytesPerBracket; i < len; i++) {
                 data.readFully(rawResults);
                 int pos = 0;
-                short pow = 1;
+                short pow = 128;
                 for (int j = 0; j < 1000000; j++) {
                     for (AnalyzerTeam[][] analyzerTeams : bracket) {
                         for (byte m = 0; m < analyzerTeams.length; m++) {
@@ -108,16 +108,16 @@ public class BracketAnalyzer {
                                 teamWinners[m] = analyzerTeams[m][0];
                             else teamWinners[m] = analyzerTeams[m][1];
                             //teamWinners[m] = ((rawResults[pos] & pow) == 0) ? bracket[r][m][0] : bracket[r][m][1];
-                            pow *= 2;
-                            if (pow == 256) {
-                                pow = 1;
+                            pow >>= 1;
+                            if (pow == 0) {
+                                pow = 128;
                                 pos++;
                             }
                         }
                         System.arraycopy(teamWinners, 0, previousWinners, 0, analyzerTeams.length);
                     }
-                    if (pow != 1) {
-                        pow = 1;
+                    if (pow != 128) {
+                        pow = 128;
                         pos++;
                     }
                     String key = teamWinners[0].seed + " " + teamWinners[0].name;
