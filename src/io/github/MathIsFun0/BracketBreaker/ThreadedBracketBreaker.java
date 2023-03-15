@@ -12,7 +12,7 @@ public class ThreadedBracketBreaker {
     public ThreadedBracketBreaker(int threads, int millions, String fileOutput) {
         bb = new MMBracketBreaker[threads];
         for (int i = 0; i < bb.length; i++)
-            bb[i] = new MMBracketBreaker(millions, fileOutput, i+1);
+            bb[i] = new MMBracketBreaker(millions, fileOutput, i+1, false);
     }
     public static void main(String[] args) {
         System.out.println("BracketBreaker v1.0.0");

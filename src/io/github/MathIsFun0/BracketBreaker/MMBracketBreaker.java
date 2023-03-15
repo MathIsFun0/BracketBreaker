@@ -2,21 +2,21 @@ package io.github.MathIsFun0.BracketBreaker;
 
 public class MMBracketBreaker extends BracketBreaker {
     private final int[][] teamList;
-    public MMBracketBreaker(int millionsToGenerate, String outputFileName, int ID) {
+    public MMBracketBreaker(int millionsToGenerate, String outputFileName, int ID, boolean splitThreads) {
         generateSigmoidArray();
         teamList = Brackets.MarchMadness2023_Optimized;
         reps = millionsToGenerate;
-        fileOutput = outputFileName;
+        fileOutput = outputFileName+(splitThreads ? ID : "");
         threadID = ID;
     }
-    public byte[] generate1000000Brackets() {
+    public byte[] generateBrackets(int numBrackets) {
         int[] teamWinners = new int[largestRoundLen];
         int[] previousWinners = new int[largestRoundLen];
-        byte[] result = new byte[1000000*bytesPerBracket];
+        byte[] result = new byte[numBrackets*bytesPerBracket];
         int pos = 0;
         short pow = 128;
         byte ml = 64;
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < numBrackets; i++) {
             ml = 64;
             for (byte r = 0; r < 6; r++) {
                 ml >>= 1;

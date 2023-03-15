@@ -16,7 +16,7 @@ public class BracketBreaker implements Runnable {
     protected String fileOutput;
     protected int threadID;
     protected static int runningInstances = 0;
-    protected static int millionsGenerated = 0;
+    protected static double millionsGenerated = 0;
     protected static boolean generationCompleted = false;
     protected static long startTime = System.currentTimeMillis();
     public BracketBreaker(GeneratorTeam[][][] bracket) {
@@ -95,6 +95,7 @@ public class BracketBreaker implements Runnable {
         return result;
     }
     public void repeatedGenerateAndSave(int threadID) throws IOException {
+        double millionsPerGen = 0.5; //Makes things easier for me
         if (runningInstances == 0) {
             millionsGenerated = 0;
             startTime = System.currentTimeMillis();
@@ -109,16 +110,18 @@ public class BracketBreaker implements Runnable {
             System.out.println(e);
         }
         while (millionsGenerated < reps) {
-            byte[] thisWorks = generate1000000Brackets();
+            byte[] brackets = generateBrackets((int) (1000000*millionsPerGen));
             if (millionsGenerated < reps) {
-                Files.write(path, thisWorks, StandardOpenOption.APPEND);
-                if (threadID != -1)
-                    System.out.print("[" + threadID + "] ");
-                millionsGenerated++;
-                System.out.print(millionsGenerated);
-                System.out.print(" million brackets generated! (");
-                System.out.print(millionsGenerated * 1000000000L / (System.currentTimeMillis() - startTime));
-                System.out.println("/sec)");
+                millionsGenerated += millionsPerGen;
+                if (millionsGenerated % 10 == 0) {
+                    if (threadID != -1)
+                        System.out.print("[" + threadID + "] ");
+                    System.out.print((int)(millionsGenerated));
+                    System.out.print(" million brackets generated! (");
+                    System.out.print((int) (millionsGenerated * 1000000000L / (System.currentTimeMillis() - startTime)));
+                    System.out.println("/sec)");
+                }
+                Files.write(path, brackets, StandardOpenOption.APPEND);
             }
         }
         if (millionsGenerated == reps && !generationCompleted) {
@@ -135,15 +138,15 @@ public class BracketBreaker implements Runnable {
         //simple overloading
         repeatedGenerateAndSave(-1);
     }
-    public byte[] generate1000000Brackets() {
+    public byte[] generateBrackets(int numBrackets) {
         GeneratorTeam[] teamWinners = new GeneratorTeam[largestRoundLen];
         GeneratorTeam[] previousWinners = new GeneratorTeam[largestRoundLen];
-        byte[] result = new byte[1000000*bytesPerBracket];
+        byte[] result = new byte[numBrackets*bytesPerBracket];
         GeneratorTeam matchResult;
         int pos = 0;
         short pow = 1;
         byte il = (byte)teamList.length;
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < numBrackets; i++) {
             for (byte r = 0; r < il; r++) {
                 byte ml = (byte) teamList[r].length;
                 for (byte m = 0; m < ml; m++) {

@@ -12,7 +12,7 @@ import java.util.*;
 
 public class BracketAnalyzer {
     // This time I'm intentionally making everything static, so it can be accessed from anywhere without making a class...
-    public static String currentFile = "D:/brackets.brk23";
+    public static String currentFile = "D:/one1.brk23";
     public static String perfectionFile = "perfection.brk23";
     public static AnalyzerTeam[][][] bracket = Brackets.MarchMadness2023Analyzer;
     public static int bytesPerBracket = 8;
