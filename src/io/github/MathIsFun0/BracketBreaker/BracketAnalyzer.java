@@ -12,7 +12,7 @@ import java.util.*;
 
 public class BracketAnalyzer {
     // This time I'm intentionally making everything static, so it can be accessed from anywhere without making a class...
-    public static String currentFile = "brackets.brk23";
+    public static String currentFile = "D:/brackets.brk23";
     public static String perfectionFile = "perfection.brk23";
     public static AnalyzerTeam[][][] bracket = Brackets.MarchMadness2023Analyzer;
     public static int bytesPerBracket = 8;
@@ -26,12 +26,11 @@ public class BracketAnalyzer {
         completedGames.add(new Integer[]{27, 0}); //4 Providence beats 13 South Dakota St
         completedGames.add(new Integer[]{1, 1}); //9 Memphis upsets 8 Boise St
         completedGames.add(new Integer[]{8, 0}); //1 Baylor beats 16 Norfolk St
-        /*try {
-            getWinners();
+        try {
+            getAndSavePerfectBrackets();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-        verboseBracketGeneration(5);
+        }
     }
 
     public static AnalyzerTeam battle(AnalyzerTeam t1, AnalyzerTeam t2) {
