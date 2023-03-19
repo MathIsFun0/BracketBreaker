@@ -12,8 +12,8 @@ import java.util.*;
 
 public class BracketAnalyzer {
     // This time I'm intentionally making everything static, so it can be accessed from anywhere without making a class...
-    public static String currentFile = "C:/Users/lmesh/Documents/Brackets/brackets0.brk23";
-    public static String perfectionFile = "perfection32.brk23";
+    public static String currentFile = "perfection32.brk23";
+    public static String perfectionFile = "perfection40.brk23";
     public static AnalyzerTeam[][][] bracket = Brackets.MarchMadness2023Analyzer;
     public static int bytesPerBracket = 8;
     public static int largestRoundLen = 32;
@@ -55,8 +55,18 @@ public class BracketAnalyzer {
         completedGames.add(new Integer[]{13, 0}); //3 Kansas St. beats 14 Montana St.
         completedGames.add(new Integer[]{28, 0}); //6 TCU beats 11 Arizona St.
         completedGames.add(new Integer[]{19, 0}); //4 Indiana beats 13 Kent St.
+
+
+        completedGames.add(new Integer[]{33, 0}); //5 San Diego St. beats 13 Furman
+        completedGames.add(new Integer[]{37, 1}); //4 Tennessee beats 5 Duke
+        completedGames.add(new Integer[]{44, 1}); //8 Arkansas upsets 1 Kansas
+        completedGames.add(new Integer[]{35, 1}); //15 Princeton upsets 7 Missouri
+        completedGames.add(new Integer[]{40, 0}); //1 Houston beats 9 Auburn
+        completedGames.add(new Integer[]{43, 1}); //2 Texas beats 10 Penn St.
+        completedGames.add(new Integer[]{47, 1}); //2 UCLA beats 7 Northwestern
+        completedGames.add(new Integer[]{32, 0}); //1 Alabama beats 8 Maryland
         try {
-            getAndSavePerfectBrackets();
+            getAndSavePerfectBracketsSmall();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,6 +155,49 @@ public class BracketAnalyzer {
                     }
                 }
             }
+            byte[] perfectBracketsLeftOver = Arrays.copyOfRange(perfectBrackets, 0, perfectBracketIdx);
+            Files.write(path, perfectBracketsLeftOver, StandardOpenOption.APPEND);
+            System.out.println("Perfection by Round:");
+            System.out.println(Arrays.toString(perfectionByRound));
+        }
+    }
+
+    public static void getAndSavePerfectBracketsSmall() throws IOException {
+        try (RandomAccessFile data = new RandomAccessFile(currentFile, "r")) {
+            byte[] rawResults = new byte[(int) data.length()];
+            byte[] perfectBrackets = new byte[(int) data.length()];
+            int perfectBracketIdx = 0;
+            Path path = Paths.get(perfectionFile);
+            File file = new File(perfectionFile);
+            file.createNewFile();
+            long[] perfectionByRound = new long[completedGames.size()];
+                data.readFully(rawResults);
+                for (int j = 0; j < data.length()/bytesPerBracket; j++) {
+                    int gamesChecked = 0;
+                    boolean busted = false;
+                    for (Integer[] completedGame : completedGames) {
+                        int index = bytesPerBracket * j + completedGame[0] / 8;
+                        if ((rawResults[index] & (1 << (7 - completedGame[0] % 8))) == 0) {
+                            if (completedGame[1] == 0) gamesChecked++;
+                            else busted = true;
+                        } else {
+                            if (completedGame[1] == 1) gamesChecked++;
+                            else busted = true;
+                        }
+                        if (busted) break;
+                        perfectionByRound[gamesChecked - 1]++;
+                    }
+                    if (!busted) {
+                        if (perfectBracketIdx == 1000000 * bytesPerBracket) {
+                            Files.write(path, perfectBrackets, StandardOpenOption.APPEND);
+                            perfectBrackets = new byte[1000000 * bytesPerBracket];
+                            perfectBracketIdx = 0;
+                        }
+                        if (bytesPerBracket >= 0)
+                            System.arraycopy(rawResults, bytesPerBracket * j, perfectBrackets, perfectBracketIdx, bytesPerBracket);
+                        perfectBracketIdx += bytesPerBracket;
+                    }
+                }
             byte[] perfectBracketsLeftOver = Arrays.copyOfRange(perfectBrackets, 0, perfectBracketIdx);
             Files.write(path, perfectBracketsLeftOver, StandardOpenOption.APPEND);
             System.out.println("Perfection by Round:");
