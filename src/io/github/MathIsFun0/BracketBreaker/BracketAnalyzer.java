@@ -12,8 +12,8 @@ import java.util.*;
 
 public class BracketAnalyzer {
     // This time I'm intentionally making everything static, so it can be accessed from anywhere without making a class...
-    public static String currentFile = "brk2.brk23";
-    public static String perfectionFile = "perfection.brk23";
+    public static String currentFile = "C:/Users/lmesh/Documents/Brackets/brackets0.brk23";
+    public static String perfectionFile = "perfection32.brk23";
     public static AnalyzerTeam[][][] bracket = Brackets.MarchMadness2023Analyzer;
     public static int bytesPerBracket = 8;
     public static int largestRoundLen = 32;
@@ -115,7 +115,7 @@ public class BracketAnalyzer {
             long[] perfectionByRound = new long[completedGames.size()];
             for (long i = 0, len = data.length() / 1000000 / bytesPerBracket; i < len; i++) {
                 if (i % 10 == 0 && i > 0) {
-                    System.out.println(i+" million brackets checked, " +perfectionByRound[completedGames.size()-1]+" remain perfect");
+                    System.out.println("["+currentFile+"] "+i+" million brackets checked, " +perfectionByRound[completedGames.size()-1]+" remain perfect");
                 }
                 data.readFully(rawResults);
                 for (int j = 0; j < 1000000; j++) {
